@@ -1,0 +1,10 @@
+version: "3"
+services:
+  oracle:
+    container_name: myxedb
+    ports:
+      - '1521:1521'
+    environment:
+      - ORACLE_PWD=mysecurepassword
+      - ORACLE_CHARACTERSET=AL32UTF8
+    image: oracle/database:18.4.0-xe
