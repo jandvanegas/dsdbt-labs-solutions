@@ -4,29 +4,54 @@
     Write the following frequent queries using the extended SQL language.
 \end{question}
 
-\subsection{2.1}
+\subsection{2.1: Query 1}
 
 \begin{question}
-Separately for each ticket type and for each month (of the ticket validity),
-analyze: the average daily revenue, the cumulative revenue from the beginning of
-the year, the percentage of tickets related to the considered ticket type over the
-total number of tickets of the month
+    Separately for each ticket type and for each month (of the ticket validity),
+    analyze: the average daily revenue, the cumulative revenue from the beginning of
+    the year, the percentage of tickets related to the considered ticket type over the
+    total number of tickets of the month.
 \end{question}
 
 \begin{answer}
+    \begin{lstlisting}[
+        language=SQL,
+    ]
+        select s.ticketType,
+            t.month,
+            t.year,
+            sum(s.totalAmount) / count(distinct t.validDate) as AVGDailyRevenue,
+            sum(sum(s.totalAmount)) over (partition by t.year order by t.month, t.year) as ACCMonthlyRevenue,
+            sum(s.numberoftickets)/sum(sum(s.numberOfTickets)) over (partition by t.month) as PercentageTicketsPerMonth
+        from TicketSale s, TimeDim t
+        where s.timeid = t.timeid
+        group by s.ticketType, t.month, t.year
+        order by s.ticketType;
+    \end{lstlisting}
 
 \end{answer}
 
-\subsection{2.2}
+\subsection{2.2 Query 2}
 
 \begin{question}
-Considering the ticket of 2021. Separately for each museum and ticket type
-analyze: the average revenue for a ticket, the percentage of revenue over the total
-revenue for the corresponding museum category, assign a rank to the museum, for
-each ticket type, according to the total number of tickets in decreasing order.
+    Considering the tickets of 2021. Separately for each museum and ticket type
+    analyze: the average revenue for a ticket, the percentage of revenue over the total
+    revenue for the corresponding museum category, assign a rank to the museum, for
+    each ticket type, according to the total number of tickets in decreasing order.
 
 \end{question}
 
 \begin{answer}
-
+    \begin{lstlisting}[
+        language=SQL,
+    ]
+        select s.ticketType,
+            m.museumId,
+            sum(s.totalAmount)/sum(s.numberoftickets) as AVGRevenuePerTicket,
+            sum(s.totalAmount)/sum(sum(s.totalAmount)) over (partition by m.category) as RevenuePercentageByCategory,
+            rank() over (partition by s.ticketType order by sum(s.numberOfTickets) DESC) as MuseumRankByNumberOfTickets
+        from TicketSale s, TimeDim t, Museum m
+        where s.timeid = t.timeid and s.museumId = m.museumId and t.year = 2021
+        group by s.ticketType, m.museumId, m.category
+    \end{lstlisting}
 \end{answer}

@@ -1,0 +1,71 @@
+\usepackage{listings}\section{Task 4}
+
+\begin{question}
+    Update and management of views via Trigger.\\
+    Assuming that the CREATE MATERIALIZED VIEW command is not available, create the
+    materialized views defined in the previous exercise and define the update procedure
+    starting from changes on the fact table created by means of a trigger.
+\end{question}
+
+\subsection{4.1: Manual materialized view creation}
+
+\begin{question}
+    Create the structure of the materialized view with CREATE TABLE VM1 (…)
+\end{question}
+    \begin{lstlisting}[language = SQL]
+        create table manual_mv(
+            ticketType varchar(16) not null,
+            month varchar(16) not null,
+            year numeric not null,
+            totalAmount Decimal not null,
+            daysIntheMonth Integer not null,
+            numberOfTickets Integer not null,
+            constraint pk_manualmv primary key (ticketType, month)
+        )
+    \end{lstlisting}
+\begin{answer}
+\end{answer}
+
+\subsection{4.2: Loading data in the materialized view}
+
+\begin{question}
+     Specify an example of statement to populate the VM1 table with the necessary
+records using the statement:
+    \begin{lstlisting}[language = SQL]
+         INSERT INTO VM1 (…)
+             ( SELECT …
+             … )
+    \end{lstlisting}
+
+\end{question}
+
+\begin{answer}
+    \begin{lstlisting}[language = SQL]
+insert into manual_mv
+    (ticketType, month,   year, totalAmount, daysInTheMonth, numberOfTickets)
+    (select s.ticketType, t.month, t.year,
+        sum(s.totalAmount) as totalAmount,
+        count(distinct t.validDate) as daysInTheMonth,
+        sum(s.numberOftickets) as totalNumberOfTickets
+    from TicketSale s, TimeDim t
+    where s.timeid = t.timeid
+    group by s.ticketType, t.month, t.year);
+    \end{lstlisting}
+\end{answer}
+
+\subsection{4.3}
+\begin{question}
+    Write the triggers necessary to propagate the changes (insertion of a new record)
+made in the FACTS table to the materialized view VM1.
+\end{question}
+
+\begin{answer}
+\end{answer}
+
+\subsection{4.4}
+\begin{question}
+     Specify which operations (e.g. INSERT) trigger the trigger created in 4.3.
+\end{question}
+
+\begin{answer}
+\end{answer}

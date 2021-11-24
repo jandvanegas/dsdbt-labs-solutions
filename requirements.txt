@@ -1,0 +1,2 @@
+invoke==1.6.0
+mimesis==5.1.0

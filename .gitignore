@@ -3,3 +3,5 @@
 out
 /homework1/file/out/
 .idea/
+venv/
+/homework1/data/

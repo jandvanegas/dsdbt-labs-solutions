@@ -1,0 +1,161 @@
+\section{Task 3}
+
+\begin{question}
+   Create and update a materialized view with \textbf{CREATE MATERIALIZED VIEW} and
+   \textbf{CREATE MATERIALIZED VIEW LOG} in \textbf{ORACLE}.\\
+   Consider the following frequent queries of interest:
+   \begin{itemize}
+       \item
+       Separately for each ticket type and for each month analyze the average daily
+       revenue.
+       \begin{lstlisting}[language=SQL]
+            select s.ticketType, t.month, t.year,
+                sum(s.totalAmount) / count(distinct t.validDate) as AVGDailyRevenue
+            from TicketSale s, TimeDim t
+            where s.timeid = t.timeid
+            group by s.ticketType, t.month, t.year
+            order by t.month, s.ticketType;
+       \end{lstlisting}
+       \item
+       Separately for each ticket type and for each month analyze the cumulative revenue
+       from the beginning of the year.
+       \begin{lstlisting}[language=SQL]
+            select s.tickettype, t.month, t.year,
+                    sum(sum(s.totalAmount))
+                        over (partition by t.year order by t.month, t.year) as AccRevenue
+            from TicketSale s, TimeDim t
+            where s.timeid = t.timeid
+            group by s.tickettype, t.month, t.year
+            order by s.tickettype, t.year;
+
+
+       \end{lstlisting}
+       \item
+       Separately for each ticket type and for each month analyze the total number of
+       tickets, the total revenue and the average revenue.
+       \begin{lstlisting}[language = SQL]
+            select s.tickettype, t.month,
+                sum(s.numberOftickets),
+                sum(s.totalAmount),
+                sum(s.totalAmount) / count(distinct t.validDate)
+            FROM TicketSale s, Timedim t
+            WHERE s.timeid = t.timeid
+            Group by s.tickettype, t.month
+       \end{lstlisting}
+       \item
+       Separately for each ticket type and for each month analyze the total number of
+       tickets, the total revenue and the average revenue for year 2021.
+       \begin{lstlisting}[language = SQL]
+            select s.tickettype, t.month,
+                sum(s.numberOftickets),
+                sum(s.totalAmount),
+                sum(s.totalAmount) / count(distinct t.validDate)
+            FROM TicketSale s, Timedim t
+            WHERE s.timeid = t.timeid and t.year = 2021
+            Group by s.tickettype, t.month;
+       \end{lstlisting}
+       \item
+       Analyze the percentage of tickets related to each ticket type and month over the
+       total number of tickets of the month for each ticket type.
+       \begin{lstlisting}[language = SQL]
+            select s.tickettype, t.month,
+                sum(s.numberOfTickets)/sum(sum(s.numberOfTickets))
+                    over (partition by t.month) monthTicketsSoldPercentage
+            FROM TicketSale s, Timedim t
+            WHERE s.timeid = t.timeid
+            Group by s.tickettype, t.month;
+       \end{lstlisting}
+   \end{itemize}
+\end{question}
+
+\subsection{3.1: Materialized view}
+
+\begin{question}
+    Define a materialized view with CREATE MATERIALIZED VIEW useful to
+    reduce the response time of the reported frequent queries.
+\end{question}
+
+\begin{answer}
+    The most comprehensive query statement for the MV would be:
+    \begin{lstlisting}[language = SQL]
+        select s.ticketType, t.month, t.year,
+            sum(s.totalAmount) / count(distinct t.validDate) as AVGDailyRevenue,
+            sum(sum(s.totalAmount))
+                    over (partition by t.year order by t.month, t.year) as AccRevenue,
+            sum(s.numberOftickets),
+            sum(s.totalAmount),
+            sum(s.totalAmount) / count(distinct t.validDate),
+            sum(s.numberOfTickets)/sum(sum(s.numberOfTickets))
+                over (partition by t.month) monthTicketsSoldPercentage
+        from TicketSale s, TimeDim t
+        where s.timeid = t.timeid
+        group by s.ticketType, t.month, t.year
+        order by t.month, s.ticketType;
+    \end{lstlisting}
+    However, in order to have a tradeoff between the MV query and the specific queries. The statement would be:
+    \begin{lstlisting}[language = SQL]
+        select s.ticketType, t.month, t.year,
+            sum(s.totalAmount) as totalAmount,
+            count(distinct t.validDate) as daysInTheMonth,
+            sum(s.numberOftickets) as totalNumberOfTickets
+        from TicketSale s, TimeDim t
+        where s.timeid = t.timeid
+        group by s.ticketType, t.month, t.year
+        order by t.month, s.ticketType;
+    \end{lstlisting}
+    The complete sql statement is:
+    \begin{lstlisting}[language = SQL]
+        CREATE MATERIALIZED VIEW ticketSaleMV
+        BUILD IMMEDIATE
+        REFRESH FAST ON DEMAND
+        ENABLE QUERY REWRITE
+        AS
+            select s.ticketType, t.month, t.year,
+                sum(s.totalAmount) as totalAmount,
+                count(distinct t.validDate) as daysInTheMonth,
+                sum(s.numberOftickets) as totalNumberOfTickets
+            from TicketSale s, TimeDim t
+            where s.timeid = t.timeid
+            group by s.ticketType, t.month, t.year;
+    \end{lstlisting}
+
+\end{answer}
+
+\subsection{3.2: Materialized view logs}
+
+\begin{question}
+    Define the materialized view logs with CREATE MATERIALIZED VIEW LOG for
+each table where you deem it necessary. For which tables is it useful to keep track
+of logs? Identify all and only the necessary tables. Furthermore, for each table
+identify all and only the attributes for which it is necessary to keep track of the
+variations.
+\end{question}
+
+\begin{answer}
+    For the TicketSale table we need: timeId, totalAmount, and number of tickets:
+    \begin{lstlisting}[language = SQL]
+        create materialized view log on TicketSale
+            with sequence, rowid
+            (timeid, ticketType, totalAmount, numberOfTickets)
+            including new values;
+    \end{lstlisting}
+    For the TimeDim table we need timeid, month and year:
+    \begin{lstlisting}[language = SQL]
+        create materialized view log on TimeDim
+            with sequence, rowid
+            (timeid, month, year)
+            including new values;
+    \end{lstlisting}
+\end{answer}
+
+\subsection{3.3: Updates on materialized view}
+\begin{question}
+    Specify which operations (e.g. INSERT on a specific table) cause an update of
+the defined MATERIALIZED VIEW
+\end{question}
+
+\begin{answer}
+    INSERT and UPDATE operations on tables TimeDim and TicketSale would update the materialized view TicketSaleMV.
+    Specifically the materialized view is updated by the UPDATE operation on table TimeDim the fields month and year,
+    and on table TicketSale the fields totalAmount, and number of tickets.
+\end{answer}
