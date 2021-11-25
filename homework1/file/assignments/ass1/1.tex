@@ -7,10 +7,12 @@
 \end{question}
 \begin{answer}
     \subsection{Conceptual Design}
+    \\
     \begin{center}
-        \includegraphics[width=0.5\textwidth]{01DWDesign.png}
+        \includegraphics[width=0.9\textwidth]{01DWDesign.png}
         \captionof{figure}{Data Warehouse Conceptual Design}
     \end{center}
+    \pagebreak
     \subsection{Logical Design}
     \underline{Primary keys are underlined}
     \subsubsection{Facts}
@@ -19,7 +21,7 @@
     for this dimensions.The only special attribute on TIME is slot that can contain a number from 1 to 3
     for each of the three blocks(08:00-12:00, 12:01-16:00, 16:01- 20:00)
     \par
-    \textbf{TICKETSALE}(\underline{timeID}, \underline{museumID}, totalAmount, numberOfTickets, purchaseModality, ticketType,
+    \textbf{TICKETSALE}(\underline{timeID, museumID}, totalAmount, numberOfTickets, purchaseModality, ticketType,
         timeSlot)
     \subsubsection{Dimensions}
     The dimensions are timeDim and museum. The museum dimension contains every one of the additional services as a binary
@@ -28,7 +30,8 @@
     location can be used more than one time, and we do not overpopulate the MUSEUM table.
     \par
     \textbf{TIMEDIM}(\underline{timeID}, validDate, month, bimester, trimester, semester, workingDay, holiday) \\
-    \textbf{MUSEUM}(\underline{museumID}, museumName, \underline{locationID}, name, category, guidedTours, audioGuides, Wardrobe, Cafe,
+    \textbf{MUSEUM}(\underline{museumID}, museumName, locationID, name, category, guidedTours, audioGuides, Wardrobe, Cafe,
     Wifi) \\
     \textbf{LOCATION}(\underline{locationID}, city, province, region) \\
 \end{answer}
+\pagebreak

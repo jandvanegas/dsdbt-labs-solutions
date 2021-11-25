@@ -1,4 +1,4 @@
-\usepackage{listings}\section{Task 4}
+\section{Task 4}
 
 \begin{question}
     Update and management of views via Trigger.\\
@@ -53,19 +53,54 @@ insert into manual_mv
     \end{lstlisting}
 \end{answer}
 
-\subsection{4.3}
+\subsection{4.3: Trigger operation for manual materialized view}
 \begin{question}
     Write the triggers necessary to propagate the changes (insertion of a new record)
 made in the FACTS table to the materialized view VM1.
 \end{question}
-
 \begin{answer}
-\end{answer}
+    \begin{lstlisting}[language = SQL]
+create trigger insertTicketSale
+    after insert on TicketSale
+    for each row
 
-\subsection{4.4}
+declare
+    recordMonth varchar(16); recordsCount number; newTotalAmount number; newDaysInTheMonth number; newTotalNumberOfTickets number;
+
+Begin
+
+select month into recordMonth  from TimeDim where timeId = :NEW.timeID;
+
+select count(*) into recordsCount from manual_mv where month = recordMonth and ticketType = :NEW.ticketType;
+
+if recordsCount > 0 then
+
+select sum(s.totalAmount), count(distinct t.validDate), sum(s.numberOftickets)
+    into newTotalAmount, newDaysInTheMonth, newTotalNumberOfTickets
+from TicketSale s, TimeDim t
+where s.timeid = t.timeid and s.ticketType=:NEW.ticketType and t.month=recordMonth;
+
+update manual_mv
+set totalAmount = newTotalAmount, daysInTheMonth = newDaysInTheMonth, numberOfTickets = newTotalNumberOfTickets
+    where month = recordMonth and ticketType = :NEW.ticketType;
+
+else
+
+insert into manual_mv
+    (ticketType, month,   year, totalAmount, daysInTheMonth, numberOfTickets)
+    ( select s.ticketType, t.month, t.year, sum(s.totalAmount) as totalAmount, count(distinct t.validDate) as daysInTheMonth, sum(s.numberOftickets) as numberOfTickets
+        from TicketSale s, TimeDim t
+        where s.timeid = t.timeid and ticketType=:NEW.ticketType and t.month=recordMonth
+        group by s.tickettype, t.month, t.year
+    );
+end if; end;
+    \end{lstlisting}
+\end{answer}
+\subsection{4.4: Details about trigger}
 \begin{question}
      Specify which operations (e.g. INSERT) trigger the trigger created in 4.3.
 \end{question}
 
 \begin{answer}
+    The trigger operation done on the item 4.3 is triggered by any INSERT on table TicketSale.
 \end{answer}

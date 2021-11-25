@@ -42,6 +42,7 @@
             WHERE s.timeid = t.timeid
             Group by s.tickettype, t.month
        \end{lstlisting}
+       \pagebreak
        \item
        Separately for each ticket type and for each month analyze the total number of
        tickets, the total revenue and the average revenue for year 2021.
@@ -67,6 +68,8 @@
        \end{lstlisting}
    \end{itemize}
 \end{question}
+
+\pagebreak
 
 \subsection{3.1: Materialized view}
 
@@ -159,3 +162,5 @@ the defined MATERIALIZED VIEW
     Specifically the materialized view is updated by the UPDATE operation on table TimeDim the fields month and year,
     and on table TicketSale the fields totalAmount, and number of tickets.
 \end{answer}
+
+\pagebreak
