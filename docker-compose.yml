@@ -8,3 +8,12 @@ services:
       - ORACLE_PWD=mysecurepassword
       - ORACLE_CHARACTERSET=AL32UTF8
     image: oracle/database:18.4.0-xe
+
+  rapidminer:
+    container_name: rapidminer
+    image: rapidminer/rapidminer-server:9.2.0
+    environment:
+      - EMBEDDED_DATABASE=1
+      - BUNDLED_JOB_AGENT=1
+    ports:
+      - '8080:8080'

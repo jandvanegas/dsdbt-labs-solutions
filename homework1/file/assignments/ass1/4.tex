@@ -102,5 +102,6 @@ end if; end;
 \end{question}
 
 \begin{answer}
-    The trigger operation done on the item 4.3 is triggered by any INSERT on table TicketSale.
+    The trigger operation done on the item 4.3 is triggered by any INSERT on table TicketSale, and just update the
+    record with the same month and ticket type in the materialized view, or if it does not exist it insert it.
 \end{answer}
