@@ -1,0 +1,55 @@
+\section{Prompt}
+
+The following relations are given (primary keys are underlined):
+
+\begin{lstlisting}[language = SQL, escapechar = \%]
+    ACCOMODATION(%\underline{CodA}%, NumberOfGuests, Address, City, Region)
+    SERVICE(%\underline{CodS}%, ServiceName, ServiceType)
+    ACCOMODATION-HAS-SERVICE(%\underline{CodA, CodS}%)
+    USER(%\underline{CodU}%, FirstName, Surname, BusinessAccount, BirthDate, Address, City, Region)
+    BOOKING(%\underline{CodA,StartDate}%, CodU, EndDate)
+\end{lstlisting}
+
+Assume the following cardinalities:
+\begin{ttfamily}
+\begin{itemize}
+    \item card(ACCOMODATION) =$10^5$ tuples, \\
+    distinct values of Region = 20
+    \item card(SERVICES)=$10^2$ tuples, \\
+    distinct values of ServiceType = 20
+    \item card(ACCOMODATION-HAS-SERVICE)=$10^6$ tuples,
+    \item card(USER)=$10^4$ tuples,\\
+    \lstinline{min(date(BirthDate)) = 1/1/1930},\\
+    \lstinline{max(date(BirthDate)) = 31/12/2009},\\
+    distinct values of Region = 20, \\
+    distinct values of BusinessAccount = 2 (“True”, “False”)
+    \item card(BOOKING)=$10^7$ tuples, \\
+    \lstinline{min(date) = 1/9/2017},  \\
+    \lstinline{max(date)) = 31/08/2020}
+\end{itemize}
+\end{ttfamily}
+Furthermore, assume the following reduction factor for the group by condition:
+\begin{itemize}
+    \item \lstinline{having count(distinct StartDate) > 1} $≈$ 1/10
+\end{itemize}
+
+\pagebreak
+
+Consider the following SQL query
+\begin{lstlisting}[language=SQL]
+    select A.CodA, count(Distinct StartDate)
+    from SERVICE S, ACCOMODATION-HAS-SERVICE AHS,
+        ACCOMODATION A, BOOKING B, USER U
+    where S.CodS=AHS.CodS and A.CodA=AHS.CodA
+        and U.CodU=B.CodU and B.CodA=A.CodA
+
+        and (S.ServiceType=”Parking” or S.ServiceType=”domestic appliances”)
+        and A.Region=”Liguria”
+        and B.StartDate>=1/5/20
+        and B.StartDate<=31/8/20
+        and U.Region<>”Piemonte”
+
+    group by CodA
+
+    having count(distinct StartDate)>1
+\end{lstlisting}

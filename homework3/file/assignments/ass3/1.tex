@@ -1,0 +1,196 @@
+\section{Tasks}
+For the SQL query:
+
+\begin{question}
+    Report the corresponding algebraic expression and specify the
+    cardinality of each node (representing an intermediate result or a leaf).
+    If necessary, assume a data distribution. Also analyze the GROUP BY
+    anticipation.
+\end{question}
+\begin{anwer}
+
+    \begin{figure}[htb!]
+        \begin{forest}
+            [\textcolor{red}{$\frac{975}{9}\cdot \frac{100}{10} {=} \frac{4750}{9} {=} 527.17$}\\\\
+            \textcolor{blue}{$\frac{1}{10} \;\; $}  $\sigma$ count(Distinct Start Date)$>1$
+            [ $\pi$ A.CodA ACount (Distinct Start Date)
+            [GB CodA \textcolor{teal}{$(5)$},
+            [\Huge $\bowtie$\\CodA \textcolor{teal}{$(3)$}, l=20mm, edge label={node[red, midway,right,font=\scriptsize]{\large $\frac{95}{9}\cdot \frac{1000}{200}\cdot 10^{2}= \frac{975}{9}\cdot 10^{2}$}}
+            [$|$, l=15mm,
+            edge label={node[blue,above=10mm, right=1mm, font=\scriptsize]{\large $\frac{1}{10}\cdot \frac{1}{20}\cdot = \frac{1}{200}$}}
+            [\Huge$\bowtie$\\CodA \textcolor{teal}{$(2)$}, l=15mm,
+            edge label={node[red, midway,left,font=\scriptsize]{\large $\frac{1}{10}\cdot 5 \cdot 10^{3}= 5 \cdot 10^{2}$}}
+            [$|$[\Huge$\bowtie$\\CodS \textcolor{teal}{$(1)$}, l=15mm, edge label={node[red, midway,left,font=\scriptsize]{\large $\frac{1}{10} \cdot 10^{6}= 10^{5}$}}
+            [$|$[$\sigma$ Service Type \\{=}\\"Parking"\\
+            or \\
+            $\sigma$ Service Type \\{=}\\"domestic appliances", l=15mm,
+            edge label={node[red, midway,left,font=\scriptsize]{ $\frac{2}{20}\cdot 100 = 10$}}
+            [Service \\(S)\\
+            \\ \textcolor{blue}{$10^{2}$}\\
+            \small \textcolor{blue}{distinct Values of}\\
+            \small \textcolor{blue}{Service Type{=} 20},
+            tier=word]
+            ]]
+            [$|$[Accomodation \\has a Service \\(AHS)\\
+            \\ \textcolor{blue}{$10^{6}$},
+            tier=word
+            ]]
+            ]]
+            [$|$, l=10mm
+            [$\sigma$ Region\\{=}\\"Liguria",
+            l=25mm,
+            edge label={node[red, midway,left,font=\scriptsize]{\large $\frac{1}{20}\cdot 10^{5} = 5 \cdot 10^{3}$}}
+            [Accomodation\\(A)\\
+            \\ \textcolor{blue}{$10^{5}$}
+            \\ \small \textcolor{blue}{distinct Integer = 20},
+            tier=word]]]
+            ]]
+
+            [$|$, l=15mm
+            [\Huge$\bowtie$\\CodU \textcolor{teal}{$(4)$},, l=15mm,
+            edge label={node[red, midway,left,font=\scriptsize]
+                {\large $\frac{19}{20}\cdot \frac{100 10}{9} =
+            \frac{95}{9}  \cdot 10^{5}$}}
+            [$|$, l=20mm,
+            edge label={node[blue,above=10mm, right=1mm, midway,left,font=\scriptsize]{\large $\frac{19}{20}$}}
+            [$\sigma$ Region \\$<>$\\Piemonte, l=20mm,
+            edge label={node[red, midway,right,font=\scriptsize]{$\frac{19}{20}\cdot \frac{10}{10^{4}}=\frac{19}{2}  \cdot 10^{3}$}}
+            [User\\(U)\\
+            \\ \textcolor{blue}{$10^{4}$}
+            \\ \small \textcolor{blue}{distinct Integer{=}20},
+            tier=word]]]
+            [$|$, l=20mm
+            [$\sigma$ StartDate \\
+            $<\\31 \setminus8\setminus 20$, l=20mm,
+            edge label={node[red, midway,right,font=\scriptsize]{\large $\frac{10^{7}}{9}$}}
+            [$\sigma$ StartDate\\ $>\\ 1\setminus 5\setminus 20$,
+            l=25mm,
+            edge label={node[red, midway,left,font=\scriptsize]{ $\frac{4}{36}\cdot {10^{7}}=\frac{1}{9}\cdot{10^{7}} $}}
+            [Booking \\(B)\\
+            \\ \textcolor{blue}{$10^{7}$}
+            \\ \small \textcolor{blue}{min date}
+            \\ \small \textcolor{blue}{$1\setminus09\setminus2017$}
+            \\ \small \textcolor{blue}{max date} \\ \small \textcolor{blue}{$31\setminus08\setminus2020$}
+            \\ \small \textcolor{blue}{range $\approx 36$ months},
+            tier=word]
+            ]
+            ]
+            ]
+            ]
+            ]
+            ]
+            ]
+            ]
+            ]
+        \end{forest}
+        \caption{Algebraic expression with cardinality. red-> cardinality, blue-> selection}
+    \end{figure}
+
+    \begin{figure}[htb!]
+        \begin{forest}
+
+            [$\pi$ A. CodA codACount, l=15mm
+            [\Huge $\bowtie$\\ CodA, l=20mm , edge label={node[red, midway,right,font=\scriptsize]{\large $\frac{10^{5}}{200}=500$}}
+            [$|$, edge label={node[blue, right = 30mm, above =12mm,left,font=\scriptsize]{\large $\frac{1}{10}\cdot \frac{1}{20}= \frac{1}{200}$}}
+            [\Huge$\bowtie$\\CodA, l=15mm, edge label={node[red, midway,left,font=\scriptsize]{\large $\frac{1}{10}\cdot 5 \cdot 10^{3}= 5 \cdot 10^{2}$}}
+            [$|$[\Huge$\bowtie$\\CodS, l=15mm, edge label={node[red, midway,left,font=\scriptsize]{\large $\frac{1}{10} \cdot 10^{6}= 10^{5}$}}
+            [$|$[$\sigma$ Service Type \\{=}\\"Parking"\\ or \\
+            $\sigma$ Service Type \\{=}\\"domestic appliances", l=15mm, edge label={node[red, midway,left,font=\scriptsize]{ $\frac{2}{20}\cdot 100 = 10$}}
+            [Service \\(S)\\ \\ \textcolor{blue}{$10^{2}$}\\
+            \small \textcolor{blue}{distinct Values of}\\ \small \textcolor{blue}{Service Type{=} 20}, tier=word
+            ]
+            ]
+            ]
+            [$|$[Accomodation \\has a Service \\(AHS)\\ \\ \textcolor{blue}{$10^{6}$},tier=word
+            ]
+            ]
+            ]
+            ]
+            [$|$, l=10mm
+            [$\sigma$ Region\\{=}\\"Liguria", l=25mm, edge label={node[red, midway,left,font=\scriptsize]{\large $\frac{1}{20}\cdot 10^{5} = 5 \cdot 10^{3}$}}
+            [Accomodation\\(A)\\ \\ \textcolor{blue}{$10^{5}$}
+            \\ \small \textcolor{blue}{distinct Integer = 20},
+            tier=word
+            ]
+            ]
+            ]
+            ]]
+            [\textcolor{red}{$10^{5}$} \\\textcolor{blue}{$\frac{1}{10} \;\; $}
+            $\sigma$ count(Distinct Start Date)$>1$
+            [GB CodA
+            [$\pi$ A.CodA count (Distinct Start Date) \\as codACount
+            [\Huge$\bowtie$\\CodU, l=25mm, edge label={node[red, midway,left,font=\scriptsize] {\large $\frac{19}{20}\cdot \frac{100 10}{9} = \frac{95}{9}  \cdot 10^{5}$}}
+            [$|$, l=20mm, edge label={node[blue,above=10mm, right=1mm, midway,left,font=\scriptsize]{\large $\frac{19}{20}$}}
+            [$\sigma$ Region \\$<>$\\Piemonte, l=20mm,
+            edge label={node[red, midway,right,font=\scriptsize]{$\frac{19}{20}\cdot \frac{10}{10^{4}}=\frac{19}{2}  \cdot 10^{3}$}}
+            [User\\(U)\\
+            \\ \textcolor{blue}{$10^{4}$}
+            \\ \small \textcolor{blue}{distinct Integer{=}20}, tier=word
+            ]
+            ]
+            ]
+            [$|$, l=20mm
+            [$\sigma$ StartDate \\ $<\\31 \setminus8\setminus 20$, l=20mm, edge label={node[red, midway,right,font=\scriptsize]{\large $\frac{10^{7}}{9}$}}
+            [$\sigma$ StartDate\\ $>\\ 1\setminus 5\setminus 20$,
+            l=25mm, edge label={node[red, midway,left,font=\scriptsize]{$\frac{4}{36}\cdot {10^{7}}=\frac{1}{9}\cdot{10^{7}} $}}
+            [Booking \\(B)\\
+            \\ \textcolor{blue}{$10^{7}$}
+            \\ \small \textcolor{blue}{min date}
+            \\ \small \textcolor{blue}{$1\setminus09\setminus2017$}
+            \\ \small \textcolor{blue}{max date} \\ \small \textcolor{blue}{$31\setminus08\setminus2020$}
+            \\ \small \textcolor{blue}{range $\approx 36$ months},tier=word
+            ]
+            ]
+            ]
+            ]
+            ]
+            ]
+            ]
+            ]
+            ]
+
+            ]
+
+        \end{forest}
+        \caption{GROUP BY anticipation}
+    \end{figure}
+
+    \subsection{Relational Algebra and Cardinality}
+    Figure one shows the relational algebra without GROUP BY anticipation while figure 2 show the
+    relational algebra and cardinality with GROUP BY anticipation.
+
+    \subsection{Group by anticipation}
+    Group by anticipation does not represent a major improvement on cardinality. Without Group by anticipation
+    the cardinality is about 523, and with it, it just arrives to 500.
+\end{anwer}
+\begin{question}
+    Select one or more secondary physical structures to increase query
+    performance. Justify your choice and report the corresponding
+    execution plan (join orders, access methods, etc.).
+    \subsection{Access path without indexes}
+    Service: access full
+    Accommodation has a Service: access full
+    Accommodation: access full + filter
+    User: access full
+    Booking: access full + filter
+    \subsection{Join and GB types}
+    The joins and GB can be found on figure 1 numerated from 1 to 5 and with color green.\\
+    1: Nested Loop -> Inner: Service, Outer: Accommodation has a service\\
+    2: Hash\\
+    3: Nested Loop -> Inner: 2, Outer 4\\
+    4: Hash\\
+    5: Sort\\
+    \subsection{Secondary physical structures}
+    There are only two secondary physical structures that can be added.\\
+    \begin{enumerate}
+        \item Region from Accommodation. Given that it has a selectivity of 1/20 less than 1/10. This has also could change if for other
+        queries, the accommodation is filter for more than one Region.
+        \item StartDate from Booking. Even though for this query the selectivity is 1/9 greater than 1/10.
+        For other queries filtering on StartDate, the selectivity could improve when filtering less days.
+    \end{enumerate}
+
+
+
+\end{question}
+\begin{anwer}
+\end{anwer}

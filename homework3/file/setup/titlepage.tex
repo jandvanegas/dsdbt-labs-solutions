@@ -1,0 +1,26 @@
+{ \centering
+
+    \fontsize{35pt}{35pt}{\bf \emphfont Homework \assnr}
+    
+    \vskip 0.2cm
+    
+    \ifthenelse{\equal{\groupnr}{}}
+    {{\bf \large \asshl{\mbox{\coursename}}}}
+    {{\bf \large \asshl{\mbox{\coursename, Group \groupnr}}}}
+    
+
+    \def\authorstabledata{} 
+    \foreachitem\z\in\authors[]{%
+        \edef\tabline{\z}
+        \expandafter\addto\expandafter\authorstabledata\expandafter{\tabline \\}
+    }
+    
+    \setlength\arrayrulewidth{3pt}
+    \begin{table}[H] \centering 
+    \begin{tabular}{r|*{\the\numexpr\nrauthorparams-2\relax}{c|}l}
+    
+        \authorstabledata
+    
+    \end{tabular}
+    \end{table}
+}
