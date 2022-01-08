@@ -1,0 +1,31 @@
+\section{Question 3}
+
+\begin{question}
+  For stations that have a status different than “offline” and “online”
+  status, visualize only the value of the status field.
+\end{question}
+
+\begin{answer}
+
+  \begin{lstlisting}[language=js]
+db.stations.find({
+  "extra.status": {
+    "$nin": [
+      "online",
+      "offline"
+    ]
+  }
+}, {"extra.status": 1, "_id": 0
+})
+  \end{lstlisting}
+  Result
+  \begin{lstlisting}[language=js]
+[
+  { extra: { status: 'maintenance' } },
+  { extra: { status: 'maintenance' } },
+  { extra: { status: 'maintenance' } },
+  { extra: { status: 'maintenance' } }
+]
+  \end{lstlisting}
+
+\end{answer}

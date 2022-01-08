@@ -1,0 +1,37 @@
+\section{Question 10}
+
+\begin{question}
+  Answer question 9, taking into account just active stations (status =
+  online).
+\end{question}
+
+\begin{answer}
+
+  \begin{lstlisting}[language=js]
+db.stations.aggregate([{$match: {"extra.status": {$eq: "online"}}}, {
+    $addFields: {
+        available_bikes: {
+            $cond: {
+                if: {$gt: ["$free_bikes", 0]},
+                then: false,
+                else: true
+            }
+        }
+    }
+}, {
+    $group: {
+        _id: "$available_bikes",
+        average: {$avg: "$extra.score"}
+    }
+}, {$project: {_id: 0, available_bikes: "$_id", average: 1}}])
+  \end{lstlisting}
+  Result
+  \begin{lstlisting}[language=js]
+[
+  { average: 3.8642857142857143, available_bikes: false },
+  { average: 3.7399999999999998, available_bikes: true }
+]
+  \end{lstlisting}
+
+\end{answer}
+\pagebreak

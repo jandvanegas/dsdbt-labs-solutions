@@ -1,0 +1,37 @@
+\section{Question 9}
+
+\begin{question}
+  What are the average ratings for stations without bikes (free\_bikes = 0)
+  and for those with at least one bike available (free\_bikes> 0)?
+\end{question}
+
+\begin{answer}
+
+  \begin{lstlisting}[language=js]
+db.stations.aggregate([{
+    $addFields: {
+        available_bikes: {
+            $cond: {
+                if: {$gt: ["$free_bikes", 0]},
+                then: false,
+                else: true
+            }
+        }
+    }
+}, {
+    $group: {
+        _id: "$available_bikes",
+        average: {$avg: "$extra.score"}
+    }
+}, {$project: {_id: 0, available_bikes: "$_id", average: 1}}])
+  \end{lstlisting}
+  \pagebreak
+  Result
+  \begin{lstlisting}[language=js]
+[
+  { average: 3.8758620689655174, available_bikes: false },
+  { average: 3.2305555555555556, available_bikes: true }
+]
+  \end{lstlisting}
+
+\end{answer}

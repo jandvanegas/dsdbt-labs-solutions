@@ -1,0 +1,24 @@
+\section{Question 1}
+
+\begin{question}
+  How many stations have (extra.status) “online” status. How many stations
+  have “offline” status?
+\end{question}
+
+\begin{answer}
+  Online
+  \begin{lstlisting}[language=js]
+db.stations.find({"extra.status": "online"}).count()
+  \end{lstlisting}
+
+  Result:33
+\end{answer}
+
+\begin{answer}
+  Offline
+  \begin{lstlisting}[language=js]
+db.stations.find({"extra.status": "offline"}).count()
+  \end{lstlisting}
+
+  Result:28
+\end{answer}

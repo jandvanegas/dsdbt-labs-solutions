@@ -17,3 +17,15 @@ services:
       - BUNDLED_JOB_AGENT=1
     ports:
       - '8080:8080'
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: toor
+      MONGO_INITDB_DATABASE: dsdbt
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./homework4/data:/dsdb/data

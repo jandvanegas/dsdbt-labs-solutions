@@ -1,0 +1,27 @@
+\section{Question 5}
+
+\begin{question}
+  What is the name of the inactive stations (status = offline) that have at
+  least one free slot (empty\_slots> 0)
+  or have at least one bike available (free\_bikes> 0)? How many free slots
+  and how many bikes are available?
+\end{question}
+
+\begin{answer}
+
+  \begin{lstlisting}[language=js]
+db.stations.find({
+        "extra.status": "offline",
+        "$or": [{"empty_slots": {"$gt": 0}}, {"free_bikes": {"$gt": 0}}]
+    }, {"name": 1, "free_bikes": 1, "empty_slots": 1})
+  \end{lstlisting}
+  Result
+  \begin{lstlisting}[language=js]
+[
+  { empty_slots: 1, free_bikes: 0, name: '06. Le Serre' },
+  { empty_slots: 0, free_bikes: 5, name: '05. Corso Garibaldi' }
+]
+  \end{lstlisting}
+
+\end{answer}
+\pagebreak

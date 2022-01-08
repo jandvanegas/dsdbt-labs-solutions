@@ -1,0 +1,58 @@
+\section{Prompt}
+
+\par
+The “bike stations” dataset is available, containing information about 65
+stations of a bike sharing service. To carry out the homework, it is
+recommended to import the dataset as a collection on a database on a local
+MongoDB server, using the mongoimport tool.
+
+\begin{tcolorbox}[width=\textwidth, title={Note},]
+  To use locally MongoDB, install the “MongoDB Community Edition” and
+  refer to the official
+  documentation.
+\end{tcolorbox}
+\begin{tcolorbox}[width=\textwidth, title={Note},]
+  To use the mongoimport tool, install “MongoDB Database Tools”,
+  (MongoDB Database Tools).
+\end{tcolorbox}
+
+\par
+You can refer to the tutorial and material provided in the MongoDB lab for
+the commands for importing a
+collection, running a MongoDB server locally and accessing the MongoDB
+command-line interface (shell).
+
+\par
+An example of a station extracted from the collection is reported below.
+
+\begin{lstlisting}[language=js]
+{
+  "_id": ObjectId( "61b75b13fd4d2d1ea82e75f4" ),
+  "empty_slots": 10,
+  "extra": {
+    "number": 57,
+    "reviews": 222,
+    "score": 4,
+    "status": "online",
+    "uid": "307"
+  },
+  "free_bikes": 4,
+  "id": "bfa12cb895ac0d7392dde60b6b433cdf",
+  "name": "San Francesco da Paola",
+  "timestamp": "2021-12-10T14:54:39.185000Z",
+  "location": {
+    "type": "Point",
+    "coordinates": [ 45.068617, 7.689097 ]
+  }
+}
+\end{lstlisting}
+
+\par
+
+To answer the homework questions, it is necessary to report:
+\begin{itemize}
+  \item The query used to obtain the answer to the question (the query must
+  extract only the fields necessary to
+  answer the question)
+  \item The result of the question
+\end{itemize}

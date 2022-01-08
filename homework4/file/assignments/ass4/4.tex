@@ -1,0 +1,48 @@
+\section{Question 4}
+
+\begin{question}
+  What are the active stations (status = online) with an average rating
+  (extra.score) greater than or equal
+  to 4?
+\end{question}
+
+\begin{answer}
+
+  \begin{lstlisting}[language=js]
+db.stations
+    .find({
+        "extra.status": "online", "extra.score": {
+            "$gte": 4
+        }
+    }, {"_id": 0, "name": 1})
+    .sort({"name": 1})
+    .map(function (row) {
+        return row.name;
+    })
+  \end{lstlisting}
+  \pagebreak
+  Result
+  \begin{lstlisting}[language=js]
+    [
+  '02. Pettiti',
+  '04. Reggia',
+  '06. Municipio',
+  '08. San Marchese',
+  '10. Gallo Praile',
+  'Belfiore',
+  'Borromini',
+  'Castello 1',
+  'Corte d`Appello',
+  'Giolitti 1',
+  'Politecnico 1',
+  'Politecnico 3',
+  'Porta Palatina',
+  'Principi d`Acaja 1',
+  'Principi d`Acaja 2',
+  'San Francesco da Paola',
+  'Sant´Anselmo',
+  'Tribunale'
+]
+  \end{lstlisting}
+
+\end{answer}

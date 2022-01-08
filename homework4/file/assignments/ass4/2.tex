@@ -1,0 +1,22 @@
+\section{Question 2}
+
+\begin{question}
+  How many stations have a status different from “online” and “offline”?
+\end{question}
+
+\begin{answer}
+
+  \begin{lstlisting}[language=js]
+db.stations.find({
+  "extra.status": {
+    "$nin": [
+      "online",
+      "offline"
+    ]
+  }
+}).count()
+  \end{lstlisting}
+
+  Result:4
+\end{answer}
+\pagebreak

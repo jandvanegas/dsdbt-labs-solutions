@@ -1,0 +1,22 @@
+\section{Question 6}
+
+\begin{question}
+  What is the total number of reviews (extra.reviews) for all stations?
+\end{question}
+
+\begin{answer}
+
+  \begin{lstlisting}[language=js]
+db.stations.aggregate([{
+    $group: {
+        _id: null,
+        "reviews": {$sum: "$extra.reviews"}
+    }
+}, {$project: {_id: 0, reviews: 1}}])
+  \end{lstlisting}
+  Result
+  \begin{lstlisting}[language=js]
+[ { reviews: 15311 } ]
+  \end{lstlisting}
+
+\end{answer}

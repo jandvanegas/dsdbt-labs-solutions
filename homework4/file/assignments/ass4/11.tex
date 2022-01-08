@@ -1,0 +1,36 @@
+\section{Question 11}
+
+\begin{question}
+  What are the names of the 3 stations with available bikes (free\_bikes> 0)
+  closest to the point [45.07456, 7.69463]? How many bikes are available?
+\end{question}
+
+\begin{answer}
+
+  \begin{lstlisting}[language=js]
+db.stations.createIndex({location: "2dsphere"})
+
+db.stations.find({
+    free_bikes: {$gt: 0},
+    location: {
+        $near: {
+            $geometry: {
+                type: "Point",
+                coordinates: [45.07456, 7.69463],
+            },
+        },
+    }
+}, {name: 1, free_bikes: 1, _id: 0}).limit(3)
+
+  \end{lstlisting}
+  Result
+  \begin{lstlisting}[language=js]
+[
+  { free_bikes: 5, name: 'Palermo 2' },
+  { free_bikes: 5, name: 'Castello 1' },
+  { free_bikes: 4, name: 'San Francesco da Paola' }
+]
+  \end{lstlisting}
+
+\end{answer}
+\pagebreak

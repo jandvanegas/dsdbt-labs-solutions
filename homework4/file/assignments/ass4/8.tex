@@ -1,0 +1,28 @@
+\section{Question 8}
+
+\begin{question}
+  What is the average rating for active (status = online) and inactive
+  (status = offline) stations?
+\end{question}
+
+\begin{answer}
+
+  \begin{lstlisting}[language=js]
+db.stations.aggregate(
+    [{$match: {"extra.status": {$in: ["online", "offline"]}}}, {
+        $group: {
+            _id: "$extra.status",
+            average: {$avg: "$extra.score"}
+        }
+    }, {$project: {_id: 0, status: "$_id", average: 1}}]
+)
+  \end{lstlisting}
+  Result
+  \begin{lstlisting}[language=js]
+[
+  { average: 3.0285714285714285, status: 'offline' },
+  { average: 3.8454545454545452, status: 'online' }
+]
+  \end{lstlisting}
+
+\end{answer}

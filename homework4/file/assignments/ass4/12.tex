@@ -1,0 +1,38 @@
+\section{Question 12}
+
+\begin{question}
+  What are the names of the 3 stations with available bikes (free_bikes> 0)
+  closest to the "Politecnico 4" station? How many bikes are available?
+\end{question}
+
+\begin{answer}
+
+  \begin{lstlisting}[language=js]
+db.stations.createIndex({location: "2dsphere"})
+
+db.stations.find({
+    free_bikes: {$gt: 0},
+    location: {
+        $near: {
+            $geometry: {
+                type: "Point",
+                coordinates:
+                    db.stations.
+                      findOne({name: "Politecnico 4"}, {location: 1, _id: 0}).
+                      location.coordinates
+                },
+           },
+    }
+}, {name: 1, free_bikes: 1, _id: 0}).limit(3)
+
+  \end{lstlisting}
+  Result
+  \begin{lstlisting}[language=js]
+[
+  { free_bikes: 9, name: 'Politecnico 1' },
+  { free_bikes: 5, name: 'Politecnico 3' },
+  { free_bikes: 3, name: 'Tribunale' }
+]
+  \end{lstlisting}
+
+\end{answer}
